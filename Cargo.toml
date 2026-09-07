@@ -1,11 +1,10 @@
 [package]
-name = "Prj_Sem_1"
+name = "FHICT-Project1"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-bevy = { version = "0.19", features = ["dynamic_linking"] }
-rust-analyzer = "0.0.1"
+bevy = { version = "0.19.1", features = ["dynamic_linking"] }
 
 [profile.dev]
 opt-level = 1

@@ -1,30 +1,9 @@
-use bevy::{ecs::query, prelude::*};
+use bevy::prelude::*;
 
-#[derive(Component)]
-struct Person;
+mod player;
 
-#[derive(Component)]
-struct Name(String);
-
-fn add_people(mut commands: Commands) {
-    commands.spawn((Person, Name("Elaina Proctor".to_string())));
-    commands.spawn((Person, Name("Renzo Hume".to_string())));
-    commands.spawn((Person, Name("Zayna Nieves".to_string())));
-}
-
-fn test() {
-    println!("123");
-}
-
-fn greet(query: Query<&Name, With<Person>>) {
-    for name in query {
-        println!("test {}", name.0);
-    }
-}
+use player::TestPlugin;
 
 fn main() {
-    App::new()
-        .add_systems(Startup, add_people)
-        .add_systems(Update, (test, greet))
-        .run();
+    App::new().add_plugins((DefaultPlugins, TestPlugin)).run();
 }
