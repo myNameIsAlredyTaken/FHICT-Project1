@@ -1,11 +1,10 @@
 use bevy::prelude::*;
 
 
-const PLAYER_SPEED: f32 = 2.;
+const PLAYER_SPEED: f32 = 100.;
 const PLAYER_SIZE: f32 = 15.;
 const PLAYER_SHAPE: Circle = Circle::new(PLAYER_SIZE);
-const PLAYER_COLOR: Color = Color::srgb(1., 1., 1.);
-
+const PLAYER_COLOR: Color = Color::srgb(0., 1., 0.);
 
 
 #[derive(Component, Default, Debug)]
@@ -14,9 +13,6 @@ struct Position(Vec2);
 
 #[derive(Component, Default)]
 struct Velocity(Vec2);
-
-// #[derive(Component, Debug)]
-// struct Acceleration(Vec2);
 
 #[derive(Component)]
 #[require(
@@ -42,24 +38,26 @@ fn spawn_player(
 
 
 // Single<> skips system if none or more than 1 match is found
-fn move_player(position: Single<(&mut Position, &Velocity), With<Player>>) {
+fn move_player(
+    position: Single<(&mut Position, &Velocity), With<Player>>,
+    time: Res<Time>
+    ) {
     let (
         mut position,
         velocity,
         ) = position.into_inner();
-    position.0 += velocity.0 * PLAYER_SPEED;
-    println!("{:?}", velocity.0);
+    position.0 += velocity.0 * PLAYER_SPEED * time.delta_secs();
 }
 
 
 fn player_input(
     keyboard_input: Res<ButtonInput<KeyCode>>,
     mut player_velocity: Single<&mut Velocity, With<Player>>
-    ) {
+) {
 
-        player_velocity.0 = Vec2::ZERO;
+    player_velocity.0 = Vec2::ZERO;
 
-        
+
     if keyboard_input.pressed(KeyCode::KeyW) {
         player_velocity.0.y = PLAYER_SPEED;
     }
@@ -72,6 +70,9 @@ fn player_input(
     if keyboard_input.pressed(KeyCode::KeyD) {
         player_velocity.0.x = PLAYER_SPEED;
     }
+
+    player_velocity.0 = player_velocity.0.normalize_or_zero();
+
 }
 
 
