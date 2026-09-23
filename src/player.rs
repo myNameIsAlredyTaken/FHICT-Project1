@@ -21,7 +21,7 @@ struct Velocity(Vec2);
     Position,
     Velocity = Velocity(Vec2::new(0., 0.)),
     )]
-pub(super) struct Player;
+pub struct Player;
 
 
 
@@ -52,7 +52,8 @@ fn spawn_player(
 
 
 // Single<> skips system if none or more than 1 match is found
-fn move_player(position: Single<(&mut Position, &Velocity),
+fn move_player(
+    position: Single<(&mut Position, &Velocity),
     With<Player>>,
     time: Res<Time>
 ) {
@@ -109,7 +110,7 @@ fn player_input(
 }
 
 
-fn update_position(mut positionables: Query<(&Position, &mut Transform)>) {
+fn update_position(mut positionables: Query<(&Position, &mut Transform), With<Player>>) {
     for (pos, mut transform) in &mut positionables {
         transform.translation = pos.0.extend(0.);
         transform.translation.z = -transform.translation.y * 0.1;
